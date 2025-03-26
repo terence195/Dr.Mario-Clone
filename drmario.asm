@@ -231,12 +231,50 @@ move_down:
     lw $t0, orientation
     sw $t0, prev_orientation
     
-    # Then do the move
+    # Check if at bottom
     lw $t0, current_y
-    beq $t0, 27, game_loop   # Don't move if at bottom
+    lw $t1, orientation
+    beqz $t1, check_horizontal_bottom    # If horizontal orientation
+    
+    # Vertical orientation check
+    beq $t0, 26, spawn_new_capsule    # Spawn new if next position would be at bottom
+    j continue_down
+    
+check_horizontal_bottom:
+    beq $t0, 27, spawn_new_capsule    # Spawn new if at bottom
+    
+continue_down:
+    # Move down if not at bottom
+    lw $t0, current_y
     addi $t0, $t0, 1        # Increase Y position
     sw $t0, current_y
     j draw_capsule
+
+spawn_new_capsule:
+    # Keep the old capsule on screen (don't clear it)
+    
+    # Reset position to top center
+    li $t0, 10             # Center X position
+    sw $t0, current_x
+    li $t0, 6              # Top Y position
+    sw $t0, current_y
+    sw $zero, orientation  # Reset to horizontal orientation
+    
+    # Generate new random colors
+    jal randomize_color
+    sw $t1, capsule_color1
+    jal randomize_color
+    sw $t1, capsule_color2
+    
+    # Reset previous position to match new position
+    # (this prevents the new capsule from clearing the old one)
+    li $t0, 10
+    sw $t0, prev_x
+    li $t0, 6
+    sw $t0, prev_y
+    sw $zero, prev_orientation
+    
+    j draw_capsule         # Draw the new capsule immediately
 
 rotate_capsule:
     # Store current position as previous
