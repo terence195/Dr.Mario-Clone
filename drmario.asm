@@ -1,8 +1,8 @@
 ################# CSC258 Assembly Final Project ###################
 # This file contains our implementation of Dr Mario.
 #
-# Student 1: Terence Yang, 1010204501
-# Student 2: Ninjie Wang 1009102141
+#
+# Student 1: Terence Yang
 #
 # We assert that the code submitted here is entirely our own 
 # creation, and will indicate otherwise when it is not.
